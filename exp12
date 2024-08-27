@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct TreeNode {
+    int value;
+    struct TreeNode *left;
+    struct TreeNode *right;
+} TreeNode;
+TreeNode* createNode(int value) {
+    TreeNode *newNode = (TreeNode*)malloc(sizeof(TreeNode));
+    newNode->value = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+int height(TreeNode* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    int leftHeight = height(node->left);
+    int rightHeight = height(node->right);
+    return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+}
+int diameter(TreeNode* node, int* diameter) {
+    if (node == NULL) {
+        return 0;
+    }
+    int leftHeight = diameter(node->left, diameter);
+    int rightHeight = diameter(node->right, diameter);
+    int currentDiameter = leftHeight + rightHeight;
+    if (currentDiameter > *diameter) {
+        *diameter = currentDiameter;
+    }
+    return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+}
+
+int main() {
+    TreeNode* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+    root->left->right = createNode(5);
+    root->right->right = createNode(6);
+    root->right->right->right = createNode(7);
+    int diameterValue = 0;
+    diameter(root, &diameterValue);
+    printf("Diameter of the binary tree: %d\n", diameterValue);
+    return 0;
+}
